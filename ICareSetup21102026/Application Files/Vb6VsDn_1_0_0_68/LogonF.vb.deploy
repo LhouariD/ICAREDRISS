@@ -1,0 +1,119 @@
+﻿Imports System.Data.OleDb
+Imports System.Data.SqlClient
+Imports System.Diagnostics.Eventing
+
+Public Class LogonF
+    '' Enable Ip
+
+    Private Sub LogonF_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.Control AndAlso e.KeyCode = Keys.D Then
+            MessageBox.Show("Ctrl+D a été pressé")
+            Iptxt.Visible = True
+            Iptxt.Enabled = True
+        End If
+    End Sub
+
+
+
+    Private Sub Btnlog_Click(sender As Object, e As EventArgs) Handles Btnlog.Click
+        Try
+            ''{
+            Ipadr = Iptxt.Text.Trim() & ",1433"
+
+            Dim conn As New SqlConnection("Data Source ='" + Ipadr + "'; Initial Catalog = BicareBrexpress; user id =driss;password=HADsql1_");   // user id =driss;password=admin")
+            '' Public Conn As New SqlConnection("Data Source = DESKTOP-6RU2QNK\SQLEXPRESS;Initial Catalog=BicareBrexpress;Integrated Security=True;Encrypt=False")
+
+
+            '' Ipadr = Iptxt.Text.Trim() & ",1433"
+            Dim iduser As String
+            Dim pwuser As String
+            Dim query As String
+            iduser = Idtxt.Text
+            pwuser = Pwtxt.Text
+            conn.Open()
+            query = "Select * from utilisateurs where desi_usr='" + Idtxt.Text + "'And prof_usr='" + Pwtxt.Text + "' "
+            '' }
+            '' else
+            '' {
+
+            '' }
+
+
+            '' SqlCommand cmd;
+            Dim cmd As New SqlCommand(query, conn)
+            Dim Reader = cmd.ExecuteReader()
+            ''SqlDataAdapter adapter = New SqlDataAdapter(cmd)
+            ''DataTable dt = New DataTable()
+            ''adapter.Fill(dt);
+            '' dt.Load(reader);
+            ''if (dt.Rows.Count > 0)
+            While (Reader.Read())
+                ''{
+                iduser = Idtxt.Text
+                pwuser = Pwtxt.Text
+                FMenuG ff2 = New FMenuG()
+                ff2.Show()
+                'Me.Hide()
+                ''}
+            End While
+            ''}
+        Catch
+            ''{
+            MessageBox.Show("invalid Passw")
+            Return;
+            ''}
+        Finally
+            ''{ //conn.Close(); }
+            ''}
+            conn.Close();
+        End Try
+    End Sub
+
+    ''////*****
+    ' Private void Btnclear_Click(Object sender, EventArgs e)
+    '
+    'Idtxt.Clear()
+    'Pwtxt.Clear()
+    'Idtxt.Focus()
+    Private Sub Btnexit_Click(sender As Object, e As EventArgs) Handles Btnexit.Click
+        Application.Exit()
+    End Sub
+
+    Private Sub LogonF_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.KeyPreview = True
+        Dim Conn2 As New OleDbConnection("provider=microsoft.ace.oledb.12.0; data source =C:\MSMOROCCO\connect.accdb; Persist Security Info=False;")
+        'Provider = Microsoft.ACE.OLEDB.12.0;Data Source=C:\myFolder\myAccessFile.accdb;Persist Security Info=False;
+        Conn2.Open()
+        Dim ChainST3 = "select * from conn"
+        Dim cmd6 As New OleDbCommand(ChainST3, Conn2)
+        Dim dr4 = cmd6.ExecuteReader
+
+        '********************************************************************************************
+        If dr4.Read Then
+            MsgBox(dr4.Item("P_Servip"))
+            If dr4.Item("P_Servip") <> "" Then
+                Iptxt.Text = dr4.Item("P_Servip")
+                Iptxt.Visible = False
+
+                Iptxt.Enabled = False
+                '********************************************************************************************
+            Else
+                '*********************** 
+
+                Iptxt.Visible = True
+                Iptxt.Enabled = True
+                '*****************************
+            End If
+            dr4.Close()
+        End If
+        Conn2.Close()
+
+
+        Ipadr = Iptxt.Text.Trim() & ",1433"
+
+    End Sub
+
+    Private Sub PictureBox2_Click(sender As Object, e As EventArgs) Handles PictureBox2.Click
+
+    End Sub
+End Class
